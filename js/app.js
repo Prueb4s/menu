@@ -2,10 +2,10 @@
  * @license
  * Copyright © 2025 Tecnología y Soluciones Informáticas. Todos los derechos reservados.
  *
- * SUPERMERCADO PANORAMA PWA
+ * DONDE PETER PWA
  *
  * Este software es propiedad confidencial y exclusiva de TECSIN.
- * El permiso de uso de este software es temporal para pruebas en Supermercados Panorama.
+ * El permiso de uso de este software es temporal para pruebas en Donde Peter.
  *
  * Queda estrictamente prohibida la copia, modificación, distribución,
  * ingeniería inversa o cualquier otro uso no autorizado de este código
@@ -16,8 +16,8 @@
 
 const { createClient } = supabase;
 
-let SUPABASE_URL = null;
-let SUPABASE_ANON_KEY = null;
+let SB_URL = null;
+let SB_ANON_KEY = null;
 let supabaseClient = null;
 
 // --- Variables de estado ---
@@ -696,11 +696,11 @@ const loadConfigAndInitSupabase = async () => {
              throw new Error("El API Route no retornó las claves de DB. Revisa las Variables de Entorno en Vercel.");
         }
 
-        SUPABASE_URL = config.url;
-        SUPABASE_ANON_KEY = config.anonKey;
+        SB_URL = config.url;
+        SB_ANON_KEY = config.anonKey;
 
         
-        supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient = createClient(SB_URL, SB_ANON_KEY);
 
         products = await fetchProductsFromSupabase();
         if (products.length > 0) {

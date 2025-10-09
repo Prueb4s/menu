@@ -1,18 +1,18 @@
 export default (req, res) => {
   
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+  const SB_URL = process.env.SB_URL;
+  const SB_ANON_KEY = process.env.SB_ANON_KEY;
 
  
   console.log('--- Diagnóstico API Config ---');
-  console.log('URL Cargada:', !!SUPABASE_URL); 
-  console.log('ANON_KEY Cargada:', !!SUPABASE_ANON_KEY);
+  console.log('URL Cargada:', !!SB_URL); 
+  console.log('ANON_KEY Cargada:', !!SB_ANON_KEY);
   console.log('------------------------------');
 
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  if (!SB_URL || !SB_ANON_KEY) {
     
     return res.status(500).json({ 
-      error: 'Variables de entorno de Supabase faltantes en la configuración de Vercel.',
+      error: 'Variables de entorno de SB faltantes en la configuración de Vercel.',
       url: null,
       anonKey: null
     });
@@ -20,7 +20,7 @@ export default (req, res) => {
 
 
   res.status(200).json({
-    url: SUPABASE_URL,
-    anonKey: SUPABASE_ANON_KEY
+    url: SB_URL,
+    anonKey: SB_ANON_KEY
   });
 };
