@@ -470,7 +470,7 @@ function addToCart(id, qty = 1) {
     const availableStock = p.stock || 0;
     const existingInCart = cart.find(i => i.id === id);
     const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
-    
+
     if (currentQtyInCart + qty > availableStock) {
         alert(`En el momento solo quedan ${availableStock} unidades.`);
         return;
@@ -487,7 +487,69 @@ function addToCart(id, qty = 1) {
             image: p.image[0]
         });
     }
+
     updateCart();
+
+    // Mostrar el toast de confirmación con imagen y título
+    showAddToCartToast({
+        image: p.image && p.image[0] ? p.image[0] : 'img/favicon.png',
+        name: p.name,
+        qty
+    });
+}
+
+/* Helper: escapar texto para evitar inyección en el toast */
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+/* Helper: crea y anima el toast (se añade al body y se elimina tras el tiempo especificado) */
+function showAddToCartToast({ image, name, qty = 1 }) {
+    // Si ya existe un toast activo, lo removemos para re-crear (evita duplicados)
+    const existing = document.getElementById('add-to-cart-toast');
+    if (existing) {
+        existing.remove();
+    }
+
+    const toast = document.createElement('div');
+    toast.id = 'add-to-cart-toast';
+    toast.className = 'add-to-cart-toast';
+
+    const safeName = escapeHtml(name);
+
+    toast.innerHTML = `
+      <img src="${image}" alt="${safeName}" class="toast-img" loading="lazy" />
+      <div class="toast-text">
+        <div class="toast-title">${safeName}</div>
+        <div class="toast-sub">Añadido x${qty}</div>
+      </div>
+    `;
+
+    // Añadir al DOM
+    document.body.appendChild(toast);
+
+    // Forzar reflow y disparar la animación CSS
+    // (usa requestAnimationFrame para asegurar aplicación de la clase 'show')
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Tiempo visible y salida animada
+    const VISIBLE_MS = 2000;
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        // eliminar al terminar la transición
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        }, { once: true });
+    }, VISIBLE_MS);
 }
 
 cartItemsContainer.addEventListener('click', (e) => {

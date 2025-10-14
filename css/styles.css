@@ -749,3 +749,102 @@ body {
 .success-modal-card .add-to-cart-btn {
   margin-top: 1rem;
 }
+
+/* ======================
+   Add-to-cart toast styles
+   ====================== */
+.add-to-cart-toast {
+  position: fixed;
+  right: 16px;
+  bottom: 84px; /* por encima del install-banner y del botón del carrito */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 22, 22, 0.92);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  transform: translateY(12px) scale(0.98);
+  opacity: 0;
+  transition: transform 260ms cubic-bezier(.2,.9,.3,1), opacity 260ms ease;
+  z-index: 2200;
+  max-width: 340px;
+  min-width: 160px;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Estado visible */
+.add-to-cart-toast.show {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Estado de salida */
+.add-to-cart-toast.hide {
+  transform: translateY(12px) scale(0.98);
+  opacity: 0;
+}
+
+/* Imagen pequeña dentro del toast */
+.add-to-cart-toast .toast-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #f3f3f3;
+}
+
+/* Texto dentro del toast */
+.add-to-cart-toast .toast-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.add-to-cart-toast .toast-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.add-to-cart-toast .toast-sub {
+  font-size: 0.82rem;
+  color: #e6e6e6;
+}
+
+/* Soporte para reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .add-to-cart-toast,
+  .add-to-cart-toast.show,
+  .add-to-cart-toast.hide {
+    transition: none;
+  }
+}
+
+/* Ajustes en pantallas pequeñas (no solapar inputs) */
+@media (max-width: 420px) {
+  .add-to-cart-toast {
+    left: 12px;
+    right: 12px;
+    bottom: 76px;
+    justify-content: flex-start;
+    max-width: calc(100% - 24px);
+  }
+
+  .add-to-cart-toast .toast-img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .add-to-cart-toast .toast-title {
+    font-size: 0.9rem;
+  }
+}
