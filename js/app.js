@@ -194,7 +194,7 @@ const generateProductCard = (p) => {
           <img src="${p.image[0]}" alt="${p.name}" class="product-image modal-trigger" data-id="${p.id}" loading="lazy" />
           <div class="image-hint" aria-hidden="true">
             <i class="fas fa-hand-point-up" aria-hidden="true"></i>
-            <span>Presiona para añadir</span>
+            <span>Presiona para ver</span>
           </div>
         </div>
         ${stockOverlay}
