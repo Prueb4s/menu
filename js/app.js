@@ -546,7 +546,7 @@ function renderSizeOptions(sizes = []) {
         const text = document.createElement('label');
         text.htmlFor = id;
         text.style = 'font-size:.95rem';
-        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)} ${typeof s.stock !== 'undefined' ? : ''}`;
+        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)} ${typeof s.stock !== 'undefined' ? `` : ''}`;
         wrapper.appendChild(radio);
         wrapper.appendChild(text);
         group.appendChild(wrapper);
