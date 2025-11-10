@@ -1,6 +1,6 @@
 {
-  "short_name": "COMIDA RÁPIDA",
-  "name": "Menu comida rápida",
+  "short_name": "NICO WINGS",
+  "name": "Menu Nico Wings",
   "icons": [
     {
       "src": "img/favicon.png",
@@ -16,5 +16,5 @@
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#2769f4"
+  "theme_color": "#ea2222"
 }
