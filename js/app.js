@@ -184,7 +184,7 @@ const generateProductCard = (p) => {
 
     let stockOverlay = '';
     let stockClass = '';
-    // Si el producto tiene sizes, consideramos stock por talla; si no, chequeamos stock general
+    // Si el producto tiene sizes, consideramos stock por tamaño; si no, chequeamos stock general
     const availableSizes = Array.isArray(p.sizes) ? p.sizes : [];
     const sizesLabels = availableSizes.length > 0 ? availableSizes.map(s => s.name).join(', ') : '';
     const totalStock = availableSizes.length > 0 ? availableSizes.reduce((acc, s) => acc + Number(s.stock || 0), 0) : (p.stock || 0);
@@ -196,7 +196,7 @@ const generateProductCard = (p) => {
 
     const descriptionText = p.description ? p.description : '';
 
-    const sizesInfoHtml = sizesLabels ? `<div style="margin-top:6px;font-size:.85rem;color:#555;"><strong>Tallas:</strong> ${sizesLabels}</div>` : '';
+    const sizesInfoHtml = sizesLabels ? `<div style="margin-top:6px;font-size:.85rem;color:#555;"><strong>Tamaños:</strong> ${sizesLabels}</div>` : '';
 
     return `
       <div class="product-card${stockClass}" data-product-id="${p.id}">
@@ -459,10 +459,10 @@ document.addEventListener('click', (e) => {
     }
     if (e.target.id === 'modal-add-to-cart-btn') {
         const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-        // verificar selección de talla
+        // verificar selección de tamaño
         const selectedSizeInput = sizeOptionsContainer ? sizeOptionsContainer.querySelector('input[name="size-option"]:checked') : null;
         if (requireSizeSelection && !selectedSizeInput) {
-            alert('Selecciona una talla antes de añadir al carrito.');
+            alert('Selecciona un tamaño antes de añadir al carrito.');
             return;
         }
         const selectedSize = selectedSizeInput ? selectedSizeInput.value : null;
@@ -503,7 +503,7 @@ function openProductModal(id) {
     currentProduct = product;
     modalProductName.textContent = product.name;
     modalProductDescription.textContent = product.description || '';
-    // Si producto tiene tallas, mostramos precio base (o primero) y las tallas como opciones
+    // Si producto tiene tamaños, mostramos precio base (o primero) y los tamaños como opciones
     const availableSizes = Array.isArray(product.sizes) ? product.sizes : [];
     if (availableSizes.length > 0) {
         modalProductPrice.textContent = `$${money(availableSizes[0].price || 0)}`;
@@ -523,13 +523,13 @@ function renderSizeOptions(sizes = []) {
     if (!sizeOptionsContainer) return;
     sizeOptionsContainer.innerHTML = '';
     if (!sizes || sizes.length === 0) {
-        sizeOptionsContainer.innerHTML = `<div class="form-group"><small>Este producto no requiere selección de talla.</small></div>`;
+        sizeOptionsContainer.innerHTML = `<div class="form-group"><small>Este producto no requiere selección de tamaño.</small></div>`;
         return;
     }
     const group = document.createElement('div');
     group.className = 'form-group';
     const label = document.createElement('label');
-    label.textContent = 'Selecciona una talla (obligatorio)';
+    label.textContent = 'Selecciona un tamaño (obligatorio)';
     group.appendChild(label);
 
     sizes.forEach((s, idx) => {
@@ -546,12 +546,12 @@ function renderSizeOptions(sizes = []) {
         const text = document.createElement('label');
         text.htmlFor = id;
         text.style = 'font-size:.95rem';
-        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)} ${typeof s.stock !== 'undefined' ? ` (stock: ${s.stock})` : ''}`;
+        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)} ${typeof s.stock !== 'undefined' ? : ''}`;
         wrapper.appendChild(radio);
         wrapper.appendChild(text);
         group.appendChild(wrapper);
 
-        // cuando cambie la talla seleccionada, actualizar precio visible
+        // cuando cambie el tamaño seleccionada, actualizar precio visible
         radio.addEventListener('change', () => {
             modalProductPrice.textContent = `$${money(Number(radio.dataset.price || 0))}`;
         });
@@ -647,15 +647,15 @@ function addToCart(id, qty = 1, sizeName = null) {
 
     const availableSizes = Array.isArray(p.sizes) ? p.sizes : [];
 
-    // Si el producto tiene tallas, obligamos a seleccionar una
+    // Si el producto tiene tamaños, obligamos a seleccionar uno
     if (availableSizes.length > 0) {
         if (!sizeName) {
-            alert('Selecciona una talla.');
+            alert('Selecciona un tamaño.');
             return;
         }
         const sizeObj = availableSizes.find(s => String(s.name).toLowerCase() === String(sizeName).toLowerCase());
         if (!sizeObj) {
-            alert('Talla inválida. Intenta de nuevo.');
+            alert('Tamaño inválido. Intenta de nuevo.');
             return;
         }
         const availableStock = Number(sizeObj.stock || 0);
@@ -663,7 +663,7 @@ function addToCart(id, qty = 1, sizeName = null) {
         const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
 
         if (currentQtyInCart + qty > availableStock) {
-            alert(`En el momento solo quedan ${availableStock} unidades de la talla ${sizeObj.name}.`);
+            alert(`En el momento solo quedan ${availableStock} unidades del tamaño ${sizeObj.name}.`);
             return;
         }
 
@@ -680,7 +680,7 @@ function addToCart(id, qty = 1, sizeName = null) {
             });
         }
     } else {
-        // Sin tallas: usar stock general (campo stock) y precio de producto
+        // Sin tamaños: usar stock general (campo stock) y precio de producto
         const availableStock = p.stock || 0;
         const existingInCart = cart.find(i => i.id === id && !i.size);
         const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
@@ -758,12 +758,12 @@ cartItemsContainer.addEventListener('click', (e) => {
     const originalProduct = products.find(p => p.id === productInCart.id);
 
     if (op === 'inc') {
-        // verificar stock dependiendo si tiene talla
+        // verificar stock dependiendo si tiene tamaño
         if (productInCart.size) {
             const sizeObj = Array.isArray(originalProduct.sizes) ? originalProduct.sizes.find(s => String(s.name).toLowerCase() === String(productInCart.size).toLowerCase()) : null;
             const stockAvailable = sizeObj ? Number(sizeObj.stock || 0) : 0;
             if ((productInCart.qty + 1) > stockAvailable) {
-                alert(`En el momento solo quedan ${stockAvailable} unidades de la talla ${productInCart.size}.`);
+                alert(`En el momento solo quedan ${stockAvailable} unidades de ese tamaño ${productInCart.size}.`);
                 return;
             }
         } else {
@@ -866,7 +866,7 @@ whatsappBtn.addEventListener('click', async () => {
             return;
         }
         
-        // 2. Llamar al API route para actualizar stock por talla y guardar orden (server-side)
+        // 2. Llamar al API route para actualizar stock por tamaño y guardar orden (server-side)
         const response = await fetch('api/place-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -971,7 +971,7 @@ const loadConfigAndInitSupabase = async () => {
         SB_URL = config.url;
         SB_ANON_KEY = config.anonKey;
 
-        // recibir flag para exigir selección de talla en PWA
+        // recibir flag para exigir selección de tamaño en PWA
         requireSizeSelection = Boolean(config.requireSizeSelection);
 
         supabaseClient = createClient(SB_URL, SB_ANON_KEY);
