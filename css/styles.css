@@ -1,3 +1,4 @@
+
 :root {
   --primary: #ea2222;
   --secondary: #f7981a;
@@ -932,6 +933,67 @@ body {
   .image-hint,
   .image-hint.show-hint {
     animation: none;
+    transition: none;
+  }
+}
+
+/* ---------- NUEVOS ESTILOS PARA OPCIONES DE TAMAÑO EN MODAL ---------- */
+.size-options {
+  margin: 10px 0;
+  display: block;
+}
+
+.size-options-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.size-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  background: #fafafa;
+  transition: all .15s ease;
+  font-size: 0.95rem;
+}
+
+.size-option input[type="radio"] {
+  accent-color: var(--primary);
+  margin-right: 6px;
+}
+
+.size-option .size-label {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.size-option .size-price {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.size-option:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+/* Responsive: tamaños de opciones */
+@media (max-width: 420px) {
+  .size-option {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Evitar transiciones si reduced-motion es preferido */
+@media (prefers-reduced-motion: reduce) {
+  .size-option {
     transition: none;
   }
 }
