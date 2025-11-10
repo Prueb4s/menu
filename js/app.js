@@ -370,7 +370,7 @@ const generateCategoryCarousel = () => {
     const categories = Array.from(new Set(products.map(p => p.category))).map(c => ({ label: c }));
     const allItem = document.createElement('div');
     allItem.className = 'category-item';
-    const allIconPath = 'img/icons/all.webp';
+    const allIconPath = 'https://cyjmulwnwmpkosmnjava.supabase.co/storage/v1/object/public/menu/icons/all.webp';
     allItem.innerHTML = `<img class="category-image" src="${allIconPath}" alt="Todo" data-category="__all"><span class="category-name">Todo</span>`;
     categoryCarousel.appendChild(allItem);
     categories.forEach(c => {
