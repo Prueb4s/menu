@@ -9,6 +9,7 @@ export default (req, res) => {
   console.log('------------------------------');
 
   if (!SB_URL || !SB_ANON_KEY) {
+    
     return res.status(500).json({ 
       error: 'Variables de entorno de SB faltantes en la configuración de Vercel.',
       url: null,
@@ -17,7 +18,8 @@ export default (req, res) => {
     });
   }
 
-  // Flag que indica a la PWA si debe exigir selección de talla
+  // Nueva opción de configuración para indicar que la PWA debe exigir selección de talla
+  // (la lógica de tallas por producto vendrá de la columna "sizes" en la tabla "products")
   res.status(200).json({
     url: SB_URL,
     anonKey: SB_ANON_KEY,

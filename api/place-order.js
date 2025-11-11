@@ -17,49 +17,83 @@ export default async (req, res) => {
   try {
     const { orderDetails } = req.body;
 
-    if (!orderDetails || !Array.isArray(orderDetails.items) || orderDetails.items.length === 0) {
+    if (!orderDetails || !orderDetails.items || orderDetails.items.length === 0) {
       return res.status(400).json({ error: 'Datos de la orden inválidos o vacíos.' });
     }
 
-    // Validaciones básicas de cada item para asegurar integridad mínima
-    for (const [i, item] of orderDetails.items.entries()) {
-      if (!item || !item.id) {
-        return res.status(400).json({ error: `Item #${i + 1} inválido: falta id.` });
+    // Validar y actualizar stock por talla dentro del campo JSONB "sizes"
+    // Recorremos cada ítem y actualizamos el producto correspondiente
+    for (const item of orderDetails.items) {
+      // item debe contener: id, qty, size (nombre de talla) y price
+      const { id: productId, qty, size: sizeName } = item;
+      if (!productId || !sizeName) {
+        return res.status(400).json({ error: `Ítem inválido. Falta id o size en item: ${JSON.stringify(item)}` });
       }
-      if (typeof item.qty === 'undefined' || Number(item.qty) <= 0) {
-        return res.status(400).json({ error: `Item #${i + 1} inválido: qty debe ser mayor que 0.` });
+
+      // Recuperar producto actual con el campo sizes
+      const { data: product, error: selectErr } = await supabase
+        .from('products')
+        .select('id, sizes')
+        .eq('id', productId)
+        .single();
+
+      if (selectErr) {
+        console.error('Error al obtener producto para actualizar stock:', selectErr);
+        return res.status(500).json({ error: 'Error al obtener producto para actualizar stock.' });
       }
-      if (typeof item.price === 'undefined' || isNaN(Number(item.price))) {
-        return res.status(400).json({ error: `Item #${i + 1} inválido: price numérico requerido.` });
+
+      const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+
+      // Buscar la talla por nombre (case-insensitive)
+      const sizeIndex = sizes.findIndex(s => String(s.name).toLowerCase() === String(sizeName).toLowerCase());
+      if (sizeIndex === -1) {
+        return res.status(400).json({ error: `Talla "${sizeName}" no encontrada para el producto ${productId}.` });
       }
-      // Si el producto exige talla, el frontend debe enviar item.size
-      if (item.requiresSize === true && !item.size) {
-        return res.status(400).json({ error: `Item #${i + 1} requiere talla (size).` });
+
+      const sizeObj = sizes[sizeIndex];
+      const currentStock = Number(sizeObj.stock || 0);
+
+      if (currentStock < qty) {
+        return res.status(400).json({ error: `Stock insuficiente para ${sizeObj.name}. Disponible: ${currentStock}` });
+      }
+
+      // Reducir stock localmente y actualizar el arreglo sizes
+      const newSizes = [...sizes];
+      newSizes[sizeIndex] = {
+        ...sizeObj,
+        stock: currentStock - qty
+      };
+
+      // Actualizar el producto con el nuevo arreglo sizes
+      const { error: updateErr } = await supabase
+        .from('products')
+        .update({ sizes: newSizes })
+        .eq('id', productId);
+
+      if (updateErr) {
+        console.error('Error al actualizar sizes del producto:', updateErr);
+        return res.status(500).json({ error: `Error al actualizar stock para ${productId}: ${updateErr.message}` });
       }
     }
 
-    // Preparar objeto para insertar en orders
+    // Insertar el pedido en la tabla 'orders'
     const orderData = {
-      customer_name: orderDetails.name || null,
-      customer_address: orderDetails.address || null,
-      payment_method: orderDetails.payment || null,
-      total_amount: orderDetails.total || 0,
+      customer_name: orderDetails.name,
+      customer_address: orderDetails.address,
+      payment_method: orderDetails.payment,
+      total_amount: orderDetails.total,
       order_items: orderDetails.items,
       order_status: 'Pendiente'
     };
 
-    const { error: orderError, data: inserted } = await supabase
-      .from('orders')
-      .insert([orderData])
-      .select();
+    const { error: orderError } = await supabase.from('orders').insert([orderData]);
 
     if (orderError) {
       console.error('Error al guardar el pedido:', orderError);
       return res.status(500).json({ error: 'Error al guardar el pedido: ' + orderError.message });
     }
 
-    // Responder éxito y devolver el registro insertado
-    return res.status(200).json({ success: true, message: 'Orden procesada con éxito.', order: inserted && inserted[0] ? inserted[0] : null });
+    return res.status(200).json({ success: true, message: 'Orden procesada con éxito.' });
 
   } catch (error) {
     console.error('Error en la API de orden:', error);
