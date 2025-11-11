@@ -2,10 +2,10 @@
  * @license
  * Copyright © 2025 Tecnología y Soluciones Informáticas. Todos los derechos reservados.
  *
- * DONDE PETER PWA
+ * Nico Wings PWA
  *
  * Este software es propiedad confidencial y exclusiva de TECSIN.
- * El permiso de uso de este software es temporal para pruebas en Donde Peter.
+ * El permiso de uso de este software es temporal para pruebas en Nico Wings.
  *
  * Queda estrictamente prohibida la copia, modificación, distribución,
  * ingeniería inversa o cualquier otro uso no autorizado de este código
@@ -28,7 +28,7 @@ let currentProduct = null;
 let deferredPrompt = null;
 const PRODUCTS_PER_PAGE = 25;
 let orderDetails = {};
-let requireSizeSelection = false; // nuevo flag según configuración
+let requireSizeSelection = false;
 
 // --- Referencias del DOM ---
 const featuredContainer = document.getElementById('featured-grid');
@@ -196,7 +196,7 @@ const generateProductCard = (p) => {
 
     const descriptionText = p.description ? p.description : '';
 
-    const sizesInfoHtml = sizesLabels ? `<div style="margin-top:6px;font-size:.85rem;color:#555;"><strong>Tamaños:</strong> ${sizesLabels}</div>` : '';
+    const sizesInfoHtml = sizesLabels ? `<div style="margin-top:6px;font-size:.85rem;color:#555;"><strong>Elige:</strong> ${sizesLabels}</div>` : '';
 
     return `
       <div class="product-card${stockClass}" data-product-id="${p.id}">
@@ -543,7 +543,7 @@ function renderSizeOptions(sizes = []) {
     const group = document.createElement('div');
     group.className = 'form-group';
     const label = document.createElement('label');
-    label.textContent = 'Selecciona un tamaño (obligatorio)';
+    label.textContent = 'Selecciona uno (obligatorio)';
     group.appendChild(label);
 
     sizes.forEach((s, idx) => {
