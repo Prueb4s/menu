@@ -106,8 +106,6 @@ body {
 
 /* Banner Carousel */
 .banner-section {
-  margin: 15px;
-  border-radius: 15px;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow);
