@@ -889,20 +889,6 @@ whatsappBtn.addEventListener('click', async () => {
             })
         });
 
-        let result = {};
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Route Falló con status:', response.status, 'Respuesta:', errorText);
-            alert('No se pudo actualizar el stock en el servidor: ' + errorText);
-        } else {
-             try {
-                result = await response.json();
-             } catch (e) {
-                 console.warn('Advertencia: El API Route devolvió una respuesta OK, pero no era JSON válido:', e.message);
-             }
-        }
-
         // 3. Enviar mensaje de WhatsApp
         const whatsappNumber = '573227671829';
         let message = `Hola mi nombre es ${encodeURIComponent(orderDetails.name)}.%0AHe realizado un pedido para la dirección ${encodeURIComponent(orderDetails.address)}.%0A%0A`;
