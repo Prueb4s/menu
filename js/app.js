@@ -376,7 +376,7 @@ const generateCategoryCarousel = () => {
     categories.forEach(c => {
         const el = document.createElement('div');
         el.className = 'category-item';
-        const fileName = `img/icons/${c.label.toLowerCase().replace(/\s+/g, '_')}.webp`;
+        const fileName = `https://cyjmulwnwmpkosmnjava.supabase.co/storage/v1/object/public/menu/icons/${c.label.toLowerCase().replace(/\s+/g, '_')}.webp`;
         el.innerHTML = `<img class="category-image" src="${fileName}" alt="${c.label}" data-category="${c.label}"><span class="category-name">${c.label}</span>`;
         categoryCarousel.appendChild(el);
     });
