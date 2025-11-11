@@ -459,14 +459,24 @@ document.addEventListener('click', (e) => {
     }
     if (e.target.id === 'modal-add-to-cart-btn') {
         const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-        // verificar selección de tamaño
-        const selectedSizeInput = sizeOptionsContainer ? sizeOptionsContainer.querySelector('input[name="size-option"]:checked') : null;
-        if (requireSizeSelection && !selectedSizeInput) {
-            alert('Selecciona un tamaño antes de añadir al carrito.');
-            return;
+        
+        // Verificar si el producto tiene tamaños seleccionables
+        const availableSizes = Array.isArray(currentProduct.sizes) ? currentProduct.sizes : [];
+        
+        // Si tiene tamaños, validar que uno esté seleccionado (OBLIGATORIO si existen tamaños)
+        if (availableSizes.length > 0) {
+            const selectedSizeInput = sizeOptionsContainer ? sizeOptionsContainer.querySelector('input[name="size-option"]:checked') : null;
+            if (!selectedSizeInput) {
+                alert('Selecciona un tamaño antes de añadir al carrito.');
+                return;
+            }
+            const selectedSize = selectedSizeInput.value;
+            addToCart(currentProduct.id, qty, selectedSize);
+        } else {
+            // Sin tamaños: agregar directamente (OPCIONAL)
+            addToCart(currentProduct.id, qty, null);
         }
-        const selectedSize = selectedSizeInput ? selectedSizeInput.value : null;
-        addToCart(currentProduct.id, qty, selectedSize);
+        
         closeModal(productModal);
     }
 });
@@ -503,6 +513,7 @@ function openProductModal(id) {
     currentProduct = product;
     modalProductName.textContent = product.name;
     modalProductDescription.textContent = product.description || '';
+    
     // Si producto tiene tamaños, mostramos precio base (o primero) y los tamaños como opciones
     const availableSizes = Array.isArray(product.sizes) ? product.sizes : [];
     if (availableSizes.length > 0) {
@@ -522,10 +533,13 @@ function openProductModal(id) {
 function renderSizeOptions(sizes = []) {
     if (!sizeOptionsContainer) return;
     sizeOptionsContainer.innerHTML = '';
+    
+    // Si no hay tamaños, no mostrar nada (es opcional)
     if (!sizes || sizes.length === 0) {
-        sizeOptionsContainer.innerHTML = `<div class="form-group"><small>Este producto no requiere selección de tamaño.</small></div>`;
+        sizeOptionsContainer.innerHTML = '';
         return;
     }
+    
     const group = document.createElement('div');
     group.className = 'form-group';
     const label = document.createElement('label');
@@ -545,8 +559,8 @@ function renderSizeOptions(sizes = []) {
         radio.dataset.stock = s.stock || 0;
         const text = document.createElement('label');
         text.htmlFor = id;
-        text.style = 'font-size:.95rem';
-        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)} ${typeof s.stock !== 'undefined' ? `` : ''}`;
+        text.style = 'font-size:.95rem;cursor:pointer;';
+        text.innerHTML = `${escapeHtml(s.name)} — $${money(s.price || 0)}`;
         wrapper.appendChild(radio);
         wrapper.appendChild(text);
         group.appendChild(wrapper);
@@ -624,7 +638,7 @@ function updateCart() {
             <img src="${item.image}" alt="${escapeHtml(item.name)}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
             <div>
               <div style="font-weight:700">${escapeHtml(item.name)}</div>
-              <div style="font-size:.9rem;color:#666">${escapeHtml(item.size || '')}</div>
+              ${item.size ? `<div style="font-size:.9rem;color:#666">${escapeHtml(item.size)}</div>` : ''}
               <div style="font-size:.9rem;color:#333">$${money(item.price)} x ${item.qty}</div>
             </div>
           </div>
@@ -647,7 +661,7 @@ function addToCart(id, qty = 1, sizeName = null) {
 
     const availableSizes = Array.isArray(p.sizes) ? p.sizes : [];
 
-    // Si el producto tiene tamaños, obligamos a seleccionar uno
+    // Si el producto tiene tamaños, procesar con stock por tamaño
     if (availableSizes.length > 0) {
         if (!sizeName) {
             alert('Selecciona un tamaño.');
@@ -990,7 +1004,7 @@ const loadConfigAndInitSupabase = async () => {
         console.error('Error FATAL al iniciar la aplicación:', error);
         
         const loadingMessage = document.createElement('div');
-        loadingMessage.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:white;display:flex;align-items:center;justify-content:center;color:red;font-weight:bold;text-align:center;padding:16px;z-index:9999';
+        loadingMessage.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:white;display:flex;align-items:center;justify-content:center;color:red;font-weight:bold;text-align:center;padding:20px';
         loadingMessage.textContent = 'ERROR DE INICIALIZACIÓN: No se pudo cargar la configuración de la tienda. Revisa la consola para más detalles (Faltan variables de entorno en Vercel).';
         document.body.appendChild(loadingMessage);
     }
