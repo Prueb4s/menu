@@ -467,7 +467,7 @@ document.addEventListener('click', (e) => {
         if (availableSizes.length > 0) {
             const selectedSizeInput = sizeOptionsContainer ? sizeOptionsContainer.querySelector('input[name="size-option"]:checked') : null;
             if (!selectedSizeInput) {
-                alert('Selecciona un tamaño antes de añadir al carrito.');
+                alert('Selecciona antes de añadir al carrito.');
                 return;
             }
             const selectedSize = selectedSizeInput.value;
@@ -664,12 +664,12 @@ function addToCart(id, qty = 1, sizeName = null) {
     // Si el producto tiene tamaños, procesar con stock por tamaño
     if (availableSizes.length > 0) {
         if (!sizeName) {
-            alert('Selecciona un tamaño.');
+            alert('Selecciona una opción.');
             return;
         }
         const sizeObj = availableSizes.find(s => String(s.name).toLowerCase() === String(sizeName).toLowerCase());
         if (!sizeObj) {
-            alert('Tamaño inválido. Intenta de nuevo.');
+            alert('Selección inválida. Intenta de nuevo.');
             return;
         }
         const availableStock = Number(sizeObj.stock || 0);
@@ -677,7 +677,7 @@ function addToCart(id, qty = 1, sizeName = null) {
         const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
 
         if (currentQtyInCart + qty > availableStock) {
-            alert(`En el momento solo quedan ${availableStock} unidades del tamaño ${sizeObj.name}.`);
+            alert(`En el momento solo quedan ${availableStock} unidades ${sizeObj.name}.`);
             return;
         }
 
@@ -777,7 +777,7 @@ cartItemsContainer.addEventListener('click', (e) => {
             const sizeObj = Array.isArray(originalProduct.sizes) ? originalProduct.sizes.find(s => String(s.name).toLowerCase() === String(productInCart.size).toLowerCase()) : null;
             const stockAvailable = sizeObj ? Number(sizeObj.stock || 0) : 0;
             if ((productInCart.qty + 1) > stockAvailable) {
-                alert(`En el momento solo quedan ${stockAvailable} unidades de ese tamaño ${productInCart.size}.`);
+                alert(`En el momento solo quedan ${stockAvailable} unidades ${productInCart.size}.`);
                 return;
             }
         } else {
