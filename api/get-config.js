@@ -18,8 +18,7 @@ export default (req, res) => {
     });
   }
 
-  // Nueva opción de configuración para indicar que la PWA debe exigir selección de talla
-  // (la lógica de tallas por producto vendrá de la columna "sizes" en la tabla "products")
+  // Exigir selección de tamaño
   res.status(200).json({
     url: SB_URL,
     anonKey: SB_ANON_KEY,
