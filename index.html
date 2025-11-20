@@ -3,9 +3,34 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ParchadosFood | Menú</title>
+    
+    <!-- SEO Básico y Título -->
+    <title>ParchadosFood | Comida Rápida en Bucaramanga</title>
+    <meta name="description" content="Consulta el menú digital de ParchadosFood. Pide las mejores hamburguesas, perros calientes y demás comida rápida en Bucaramanga. ¡Haz tu pedido a domicilio!">
+    <meta name="keywords" content="parchadosfood, comida rápida bucaramanga, menú digital, hamburguesas, perros calientes, domicilio santander">
+
+    <!-- URL Canónica -->
+    <link rel="canonical" href="https://parchados.vercel.app/" />
+
+    <!-- SEO Open Graph (para WhatsApp, Facebook, etc.) -->
+    <meta property="og:title" content="ParchadosFood | Comida Rápida en Bucaramanga" />
+    <meta property="og:description" content="Pide las mejores hamburguesas, perros calientes y más. ¡Consulta nuestro menú y haz tu pedido a domicilio!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://parchados.vercel.app/" />
+    <meta property="og:image" content="https://parchados.vercel.app/img/favicon.png" />
+    <meta property="og:image:alt" content="Logo de ParchadosFood Comida Rápida" />
+
+    <!-- SEO Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Menú Digital ParchadosFood">
+    <meta name="twitter:description" content="Pide las mejores hamburguesas, perros calientes y más. ¡Consulta nuestro menú!">
+    <meta name="twitter:image" content="https://parchados.vercel.app/img/favicon.png">
+
+    <!-- PWA y Meta de Tema -->
     <link rel="manifest" href="./manifest.json" />
-    <meta name="theme-color" content="#721919" />
+    <meta name="theme-color" content="#7981a" />
+    <link rel="icon" href="https://parchados.vercel.app/img/favicon.png" />
+    <link rel="apple-touch-icon" href="https://parchados.vercel.app/img/favicon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +41,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <script charset="UTF-8" src="//web.webpushs.com/js/push/1ed281446e2e741d69c9c9a386b5a047_1.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- JSON-LD (Structured Data) para SEO Local -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Donde Peter",
+      "image": "https://parchados.vercel.app/img/favicon.png",
+      "url": "https://parchados.vercel.app/",
+      "telephone": "+57-3227671829",
+      "servesCuisine": "ParchadosFood",
+      "priceRange": "$",
+      "menu": "https://parchados.vercel.app/",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Calle 20 # 32c15",
+        "addressLocality": "Bucaramanga",
+        "addressRegion": "Santander",
+        "postalCode": "680001",
+        "addressCountry": "CO"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "18:00",
+          "closes": "02:00"
+        }
+      ]
+    }
+    </script>
 </head>
+
 <body>
     <div class="page-container">
 

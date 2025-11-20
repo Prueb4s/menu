@@ -1,6 +1,6 @@
 {
-  "short_name": "NICO WINGS",
-  "name": "Menu Nico Wings",
+  "short_name": "ParchadosFood",
+  "name": "Menu Parchados Food",
   "icons": [
     {
       "src": "img/favicon.png",
@@ -16,5 +16,5 @@
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#ea2222"
+  "theme_color": "#7981a"
 }
